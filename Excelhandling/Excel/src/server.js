@@ -7,11 +7,11 @@ const csvParser = require('csv-parser');
 
 // Set up PostgreSQL connection pool
 const pool = new Pool({
-  user: 'postgres',      // PostgreSQL user
+  user: 'postgres',     
   host: 'localhost',
   database: 'excelhandling',
   password: '1234',
-  port: 5432,                // Default PostgreSQL port
+  port: 5432,                
 });
 
 // Set up Multer to handle file uploads
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// Function to validate data types
+//  validate data types
 const validateDataType = (value, expectedType) => {
   switch (expectedType) {
     case 'string':

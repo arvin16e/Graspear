@@ -71,9 +71,13 @@ const FileUpload = () => {
       setErrorMessages([]); // Clear previous errors if the upload is successful
       setFile(null);
     } catch (error) {
+      console.log('Error response:', error.response);  
       if (error.response && error.response.data.errors) {
         setErrorMessages(error.response.data.errors);
-      } else {
+      } else if (error.response && error.response.data.message) {
+        // If there's a general error message
+        setErrorMessages([error.response.data.message]);
+      }else {
         setErrorMessages(['An unexpected error occurred']);
       }
       setSuccessMessage('');
@@ -133,8 +137,8 @@ const FileUpload = () => {
           <input {...getInputProps()} />
           <p>{file ? file.name : 'Drag & drop an Excel/CSV file here, or click to select one'}</p>
         </div>
-        {/* Fallback for normal upload */}
-        <input type="file" onChange={(e) => setFile(e.target.files[0])} accept=".xlsx,.xls,.csv" />
+        {/* Fallback for normal upload
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} accept=".xlsx,.xls,.csv" />  */}
       </div>
 
       {/* Feedback Message */}

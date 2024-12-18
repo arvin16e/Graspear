@@ -57,3 +57,15 @@ input[type="file"] {
 .submit-btn:hover {
   background-color: #357ab7;
 }
+.error-messages {
+  background-color: #e24848;
+  color: #151414;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.error {
+  font-size: 14px;
+  margin: 5px 0;
+}
