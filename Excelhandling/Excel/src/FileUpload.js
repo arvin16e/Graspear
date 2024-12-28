@@ -63,13 +63,18 @@ const FileUpload = () => {
     formDataToSend.append('file',file);
     
     try{
+       // Send POST request
       const response = await axios.post('http://localhost:5000/upload', formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      if(response.status==200){
+        setSuccessMessage(['File uploaded successfully!']);
+        setErrorMessages([]); // Clear previous errors if the upload is successful
+        setFile(null);
+      }else {
+        setErrorMessages(['Unexpected error occured FU75']);
+      }
 
-      setSuccessMessage(response.data.message);
-      setErrorMessages([]); // Clear previous errors if the upload is successful
-      setFile(null);
     } catch (error) {
       console.log('Error response:', error.response);  
       if (error.response && error.response.data.errors) {
@@ -78,7 +83,7 @@ const FileUpload = () => {
         // If there's a general error message
         setErrorMessages([error.response.data.message]);
       }else {
-        setErrorMessages(['An unexpected error occurred']);
+        setErrorMessages(['An error occurred']);
       }
       setSuccessMessage('');
     }

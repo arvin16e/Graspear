@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "485794209507",
+    "project_id": "project-management-8bc8f",
+    "storage_bucket": "project-management-8bc8f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485794209507:android:4bff841a8a2ecbab946fd6",
+        "android_client_info": {
+          "package_name": "com.graspear.projectmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV52orBbfcn9i3QggQSL5uJDMG9S3a2aA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.Projectmanagement.Entity;
 
+import java.util.Date;
 import java.util.UUID;
 
 import com.enums.Role;
@@ -17,26 +18,29 @@ import jakarta.persistence.Table;
 public class Employees {
 
 	@Id
-	@Column(name="GsplId")
-	private String id;
-	@Column(name="UUID")
+	@Column(name="Emp_Id", nullable=false)
+	private String emp_id;
+	@Column(name="UUID", nullable=false,unique=true)
 	private UUID uuid;
-	@Column(name="Firstname")
+	@Column(name="Firstname", nullable=false)
 	private String firstname;
-	@Column(name="Lastname")
+	@Column(name="Lastname", nullable=false)
 	private String lastname;
-	@Column(name="Email")
+	@Column(name="Email", nullable=false,unique=true)
 	private String email;
-	@Column(name="Phone_number")
+	@Column(name="Phone_number", nullable=false,unique=true)
 	private Long phone_number;
-	@Column(name = "Password")
+	@Column(name = "Password", nullable=false)
 	private String password;
 	@Enumerated(EnumType.STRING)
 	@Column(name="Role")
 	private Role role;
+	
 	@Lob
-	@Column(name="Image")
+	@Column(name="Image", nullable=false)
 	private byte[] imageData;
+	@Column(name="Created_At")
+	private Date createdAt;
 	
 	
 	
@@ -49,12 +53,20 @@ public class Employees {
 		this.role = role;
 	}
 
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
 	public String getId() {
-		return id;
+		return emp_id;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.emp_id = id;
 	}
 
 	public String getFirstname() {

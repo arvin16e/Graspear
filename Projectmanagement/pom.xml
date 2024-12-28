@@ -108,7 +108,20 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>8.2.0</version>
 		</dependency>
+		<!-- Required for GCP and FCM services -->
+		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>1.10.0</version>
+		</dependency>
 
+
+		<!-- swagger-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 	</dependencies>
 	<!-- Repository if needed -->

@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const multer = require('multer');
 const { Pool } = require('pg');
 const fs = require('fs');
@@ -21,6 +22,11 @@ const upload = multer({ storage });
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+app.use(cors({
+  origin: 'http://localhost:3000' 
+})); // This will allow all origins; you can customize it if needed
 
 
 //  validate data types
@@ -121,8 +127,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       [name, email, phone, fileData]
     );
 
-    const uploadedId = result.rows[0].id;
-    res.status(200).json({ message: `File uploaded successfully! ID: ${uploadedId}` });
+    //const uploadedId = result.rows[0].id;
+    res.status(200).json({ message: `File uploaded successfully!` });
 
   } catch (error) {
     console.error(error);
@@ -166,141 +172,3 @@ app.listen(port, () => {
 });
 
 
-/* 
-
-const express = require('express');
-const multer = require('multer');
-const { Pool } = require('pg');
-const xlsx = require('xlsx');
-const csvParser = require('csv-parser');
-
-// PostgreSQL connection
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'filehandling',
-  password: '1234',
-  port: 5432,
-});
-
-// Set up Multer for file uploads
-const storage = multer.memoryStorage(); // Store files in memory
-const upload = multer({ storage });
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Function to validate data types
-const validateDataType = (value, expectedType) => {
-  switch (expectedType) {
-    case 'string':
-      return typeof value === 'string';
-    case 'integer':
-      return Number.isInteger(parseInt(value, 10));
-    case 'double':
-      return !isNaN(value) && parseFloat(value) !== parseInt(value, 10);
-    case 'float':
-      return !isNaN(value);
-    case 'date':
-      return !isNaN(Date.parse(value));
-    case 'boolean':
-      return value === 'true' || value === 'false' || typeof value === 'boolean';
-    case 'object':
-      return typeof value === 'object' && value !== null && !Array.isArray(value);
-    default:
-      return false;
-  }
-};
-
-// Column validation mapping
-const columnValidation = {
-  0: 'string',   // Column A: String
-  1: 'integer',  // Column B: Integer
-  2: 'double',   // Column C: Double
-  3: 'float',    // Column D: Float
-  4: 'date',     // Column E: Date
-  5: 'boolean',  // Column F: Boolean
-  6: 'object',   // Column G: Object
-};
-
-// Endpoint to handle Excel and CSV uploads
-app.post('/upload', upload.single('file'), async (req, res) => {
-  const file = req.file;
-
-  if (!file) {
-    return res.status(400).json({ errors: ['Please upload a file'] });
-  }
-
-  const fileName = file.originalname.toLowerCase();
-  const isCSV = fileName.endsWith('.csv');
-  const isExcel = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
-
-  if (!isCSV && !isExcel) {
-    return res.status(400).json({ errors: ['Only Excel (.xlsx, .xls) or CSV files are supported'] });
-  }
-
-  try {
-    let data = [];
-    if (isExcel) {
-      // Parse Excel file
-      const workbook = xlsx.read(file.buffer, { type: 'buffer' });
-      const sheetName = workbook.SheetNames[0];
-      data = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 }); // Raw data as an array
-    } else if (isCSV) {
-      // Parse CSV file
-      const csvData = [];
-      const csvStream = csvParser({ headers: false });
-      csvStream.write(file.buffer);
-      csvStream.on('data', (row) => csvData.push(Object.values(row)));
-      await new Promise((resolve) => csvStream.on('end', resolve));
-      data = csvData;
-    }
-
-    // Skip the first row if it contains headers
-    const errors = [];
-    for (let rowIndex = 1; rowIndex < data.length; rowIndex++) {
-      const row = data[rowIndex];
-
-      for (let colIndex = 0; colIndex < row.length; colIndex++) {
-        const cellValue = row[colIndex];
-        const expectedType = columnValidation[colIndex];
-
-        if (expectedType && !validateDataType(cellValue, expectedType)) {
-          errors.push(
-            `Row ${rowIndex + 1}, Column ${String.fromCharCode(65 + colIndex)}: Expected ${expectedType}, found ${typeof cellValue}`
-          );
-        }
-      }
-    }
-
-    // If errors exist, return them
-    if (errors.length > 0) {
-      return res.status(400).json({ errors });
-    }
-
-    // Save the file to the database
-    const result = await pool.query(
-      'INSERT INTO file_uploads (file_name, file_data) VALUES ($1, $2) RETURNING id',
-      [file.originalname, file.buffer]
-    );
-
-    const uploadedId = result.rows[0].id;
-    res.status(200).json({ message: `File validated and uploaded successfully! ID: ${uploadedId}` });
-  } catch (error) {
-    console.error('Error processing file:', error);
-    res.status(500).json({ errors: ['An unexpected error occurred'] });
-  }
-});
-
-// Start the server
-const port = 5000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
-
-
-
-
-
-*/
